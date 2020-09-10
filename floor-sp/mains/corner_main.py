@@ -143,12 +143,12 @@ def predict_corners(configs):
 
             save_path_cornermap = os.path.join(viz_dir, '{}_corners_pred.png'.format(idx))
             save_path_cornermap_gt = os.path.join(viz_dir, '{}_corners_pred_gt.png'.format(idx))
-            imsave(save_path_cornermap, corner_edge_map)
-            imsave(save_path_cornermap_gt, gt_corner_edge_map)
+            imsave(save_path_cornermap, corner_edge_map.astype(np.uint8))
+            imsave(save_path_cornermap_gt, gt_corner_edge_map.astype(np.uint8))
             save_path_heatmap = os.path.join(viz_dir, '{}_heatmap_pred.png'.format(idx))
             save_path_heatmap_edge = os.path.join(viz_dir, '{}_heatmap_edge_pred.png'.format(idx))
-            imsave(save_path_heatmap, heatmap)
-            imsave(save_path_heatmap_edge, heatmap_edge)
+            imsave(save_path_heatmap, (heatmap * 255).astype(np.uint8))
+            imsave(save_path_heatmap_edge, (heatmap_edge * 255).astype(np.uint8))
 
             # dump the intermediate results to disk
             if configs.dump_prediction is True:
