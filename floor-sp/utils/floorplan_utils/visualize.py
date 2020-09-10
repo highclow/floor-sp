@@ -3,7 +3,7 @@ import numpy as np
 from scipy import ndimage
 import pdb
 from scipy.ndimage.morphology import binary_erosion
-from scipy.misc import imresize
+#from scipy.misc import imresize
 
 def _convert_color(color):
     converted_color = [color[0] * 255, color[1] * 255, color[2] * 255]
@@ -85,6 +85,7 @@ def draw_final_floorplan(scale, input_img, all_room_edges, global_graph, room_id
     input_img = np.concatenate([input_img, np.ones([input_img.shape[0], input_img.shape[1], 1])], axis=-1).astype(np.uint8)
     input_img[:, :, -1] = 255
     input_img = imresize(input_img, [scale, scale, 4])
+
     # rooms_info = sorted(rooms_info, key=lambda x: x['mask'].sum())
     # pred_mask = rooms_info[to_idx]['mask']
     # pred_mask = binary_erosion(pred_mask, iterations=2).astype(np.uint8)

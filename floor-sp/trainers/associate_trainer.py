@@ -2,7 +2,7 @@ import time
 import os
 import torch
 from utils.misc import AverageMeter, binary_pred_accuracy
-from scipy.misc import imsave
+from imageio import imsave
 import pdb
 
 

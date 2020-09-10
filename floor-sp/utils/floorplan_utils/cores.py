@@ -217,7 +217,7 @@ def _get_room_connections_pixel_grpah(room_info, density_img, inter_region, inte
 
     # for visualizing all intermediate representations
     import cv2
-    from scipy.misc import imsave, imread
+    from imageio import imsave, imread
     debug_img = np.zeros([256, 256, 3])
     debug_img += np.stack([mask] * 3, axis=-1).astype(np.float32) * 255
     for corner_idx, corner_info in enumerate(corners_info):

@@ -2,7 +2,7 @@ import _init_paths
 import os
 import numpy as np
 import cv2
-from scipy.misc import imsave, imread
+from imageio import imsave, imread
 from utils.floorplan_utils.cores import solve_connections
 from utils.floorplan_utils.merge import merge_room_graphs
 from utils.floorplan_utils.visualize import draw_final_floorplan
@@ -19,7 +19,7 @@ def run_roomwise_coorindate_descent(source_dir, save_dir, round_1):
         file_path = os.path.join(source_dir, filename)
 
         with open(file_path, 'rb') as f:
-            data = np.load(f)
+            data = np.load(f, allow_pickle=True)
         data = data.tolist()
 
         density_img = data['density_img']

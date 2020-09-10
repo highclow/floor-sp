@@ -15,6 +15,7 @@ import re
 
 import numpy as np
 import torch
+import torchvision
 import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
@@ -24,9 +25,8 @@ from collections import OrderedDict
 
 import model.utils as utils
 import model.visualize as visualize
-from model.nms.nms_wrapper import nms
 from model.collate import PadCollate
-from model.roialign.roi_align.crop_and_resize import CropAndResizeFunction
+from roi_align.crop_and_resize import CropAndResizeFunction
 
 import pdb
 
@@ -389,7 +389,7 @@ def proposal_layer(inputs, proposal_count, nms_threshold, anchors, config=None):
     # Non-max suppression   
     final_boxes = []
     for bx, sc in zip(boxes, scores):
-        keep = nms(torch.cat((bx, sc.unsqueeze(-1)), -1).data, nms_threshold)
+        keep = torchvision.ops.nms(bx, sc, nms_threshold)
         keep = keep[:proposal_count]
         bx = bx[keep, :]
         final_boxes.append(
@@ -465,7 +465,7 @@ def pyramid_roi_align(inputs, pool_size, image_shape):
         # Stop gradient propogation to ROI proposals
         level_boxes = level_boxes.detach()
 
-        pooled_features = CropAndResizeFunction(pool_size, pool_size, 0)(feature_maps[i], level_boxes, ix[:, 0].int())
+        pooled_features = CropAndResizeFunction.apply(feature_maps[i], level_boxes, ix[:, 0].int(), pool_size, pool_size, 0)
         pooled.append(pooled_features)
 
     # Pack pooled features into one tensor
@@ -746,7 +746,7 @@ def refine_detections(rois, probs, deltas, window, config):
         ix_scores, order = ix_scores.sort(descending=True)
         ix_rois = ix_rois[order.data, :]
 
-        class_keep = nms(torch.cat((ix_rois, ix_scores.unsqueeze(1)), dim=1).data, config.DETECTION_NMS_THRESHOLD)
+        class_keep = torchvision.ops.nms(ix_rois, ix_scores, config.DETECTION_NMS_THRESHOLD)
 
         # Map indicies
         class_keep = keep[ixs[order[class_keep].data].data]

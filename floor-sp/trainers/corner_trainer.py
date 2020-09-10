@@ -2,7 +2,7 @@ import time
 import os
 import torch
 from utils.misc import AverageMeter
-from scipy.misc import imsave
+from imageio import imsave
 import numpy as np
 from utils.floorplan_utils.floorplan_misc import get_corner_dir_map
 import pdb

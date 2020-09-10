@@ -5,7 +5,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from torch.optim.lr_scheduler import StepLR
-from scipy.misc import imsave, imread
+from imageio import imsave, imread
 import numpy as np
 
 from datasets.lianjia_corner_dataset import LianjiaCornerDataset

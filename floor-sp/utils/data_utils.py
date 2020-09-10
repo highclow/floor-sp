@@ -3,7 +3,7 @@ import numpy as np
 import copy
 from scipy.ndimage.filters import gaussian_filter, convolve
 from scipy.ndimage.morphology import binary_dilation
-from scipy.misc import imrotate
+from scipy.ndimage.interpolation import rotate as imrotate
 from scipy import ndimage
 import cv2
 import pdb

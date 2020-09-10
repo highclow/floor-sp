@@ -13,7 +13,7 @@ import math
 import random
 import cv2
 import numpy as np
-import scipy.misc
+from PIL import Image
 import scipy.ndimage
 import skimage.color
 import skimage.io
@@ -336,8 +336,7 @@ def resize_image(image, min_dim=None, max_dim=None, padding=False):
             scale = max_dim / image_max
     # Resize image and mask
     if scale != 1:
-        image = scipy.misc.imresize(
-            image, (round(h * scale), round(w * scale)))
+        image = np.array(Image.fromarray(image).resize(round(w * scale), round(h * scale)))
     # Need padding?
     if padding:
         # Get new height and width
@@ -380,7 +379,10 @@ def minimize_mask(bbox, mask, mini_shape):
         m = m[y1:y2, x1:x2]
         if m.size == 0:
             raise Exception("Invalid bounding box with area of zero")
-        m = scipy.misc.imresize(m.astype(float), mini_shape, interp='bilinear')
+        import pdb; pdb.set_trace()
+        print(mini_shape)
+        m = np.array(Image.fromarray(m.astype(float)).resize(mini_shape[::-1]))
+        #m = scipy.misc.imresize(m.astype(float), mini_shape, interp='bilinear')
         mini_mask[:, :, i] = np.where(m >= 128, 1, 0)
     return mini_mask
 
@@ -417,8 +419,7 @@ def unmold_mask(mask, bbox, image_shape):
     """
     threshold = 0.5
     y1, x1, y2, x2 = bbox
-    mask = scipy.misc.imresize(
-        mask, (y2 - y1, x2 - x1), interp='bilinear').astype(np.float32) / 255.0
+    mask = np.array(Image.fromarray(mask).resize((x2-x1, y2-y1), Image.BILINEAR))
     mask = np.where(mask >= threshold, 1, 0).astype(np.uint8)
 
     # Put the mask in the right location.
